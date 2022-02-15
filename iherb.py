@@ -42,25 +42,25 @@ def product_info(url):
 
 
 if __name__ == "__main__":
-    headers = {"User-Agent":""}
+    headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"}
 
     options = webdriver.ChromeOptions()
-    # options.headless=True
+    options.headless=True
     options.add_argument("start-maximized")
     options.add_argument("disable-infobars --disable-extensions --no-sandbox --disable-dev-shm-usage")
-    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36")
-    caps = DesiredCapabilities().CHROME
-    caps["pageLoadStrategy"] = "none"
-    driver = webdriver.Chrome(desired_capabilities=caps, options=options)
+    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36")
+    # caps = DesiredCapabilities().CHROME
+    # caps["pageLoadStrategy"] = "none"
+    driver = webdriver.Chrome(options=options)
 
     cats = []
     brands = ['21st-century-health-care']
     urls = get_product_url(brands)
 
-    dict = {}
+    dic = {}
     for url in urls:
         name, category, upc_code = product_info(url)
-        dict[name] = {
+        dic[name] = {
             'category':category,
             'upc_code':upc_code,
             'reviews':[]
@@ -75,10 +75,8 @@ if __name__ == "__main__":
 
             reviews = driver.find_elements_by_css_selector('div.review-text')
             for review in reviews:
-                dict[name]['reviews'].append(review.text)
-        print(dict)
-        break
+                dic[name]['reviews'].append(review.text)
     with open('./iherb_review.json', 'w') as f:
-        json.dump(dict, f, ensure_ascii=False, indent=4)
+        json.dump(dic, f, ensure_ascii=False, indent=4)
     
     driver.close()
